@@ -29,24 +29,13 @@ namespace PortableWikiViewer.Core
 
         private void ProcessHeader()
         {
-            byte[] header = _reader.ReadBytes(6);
-            if (!Enumerable.SequenceEqual(header, MagicHeader))
-                throw new InvalidDataException("Not an XZ Stream");
+            CheckMagicBytes(_reader.ReadBytes(6));
+            ProcessStreamFlags(_reader.ReadBytes(2));
+            CheckCheckIsSupported();
+        }
 
-            byte[] streamFlags = _reader.ReadBytes(2);
-            byte typeOfCheck = (byte)(streamFlags[1] & 0x0F);
-            byte futureUse = (byte)(streamFlags[1] & 0xF0);
-            if (futureUse != 0 || streamFlags[0] != 0)
-                throw new InvalidDataException("Unknown XZ Stream Version");
-
-            _checkType = (CheckType)typeOfCheck;
-            int CrcSize = (((typeOfCheck) + 2) / 3) * 4;
-
-            UInt32 CRC = unchecked((uint)ReadLittleEndianInt());
-            UInt32 calcCrc = Crc32.Compute(streamFlags);
-            if (CRC != calcCrc)
-                throw new Exception("Stream header corrupt");
-
+        private void CheckCheckIsSupported()
+        {
             switch (_checkType)
             {
                 case CheckType.NONE:
@@ -60,6 +49,27 @@ namespace PortableWikiViewer.Core
                 default:
                     throw new NotSupportedException("Check Type unknown to this version of decoder.");
             }
+        }
+
+        private void ProcessStreamFlags(byte[] streamFlags)
+        {
+            byte typeOfCheck = (byte)(streamFlags[1] & 0x0F);
+            byte futureUse = (byte)(streamFlags[1] & 0xF0);
+            if (futureUse != 0 || streamFlags[0] != 0)
+                throw new InvalidDataException("Unknown XZ Stream Version");
+
+            _checkType = (CheckType)typeOfCheck;
+
+            UInt32 crc = unchecked((uint)ReadLittleEndianInt());
+            UInt32 calcCrc = Crc32.Compute(streamFlags);
+            if (crc != calcCrc)
+                throw new Exception("Stream header corrupt");
+        }
+
+        private void CheckMagicBytes(byte[] header)
+        {
+            if (!Enumerable.SequenceEqual(header, MagicHeader))
+                throw new InvalidDataException("Not an XZ Stream");
         }
 
         public int ReadLittleEndianInt()
