@@ -1,6 +1,6 @@
 PortableWikiViewer
 ====================
 
-An attempt to create a portable, lightweight wiki viewer in Mono with clients for multiple platforms.
+An attempt to create a portable, lightweight wiki viewer with clients for multiple platforms.
 
-[![Build Status](https://travis-ci.org/sambott/PortableWikiViewer.svg)](https://travis-ci.org/sambott/PortableWikiViewer)
+[![Build status](https://ci.appveyor.com/api/projects/status/aiqnfp0376f31nja?svg=true)](https://ci.appveyor.com/project/sambott/portablewikiviewer)

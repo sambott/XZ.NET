@@ -1,0 +1,6 @@
+version: 0.1.{build}
+before_build:
+- nuget restore src/PortableWikiViewer.sln
+build:
+  project: src/PortableWikiViewer.sln
+  verbosity: minimal

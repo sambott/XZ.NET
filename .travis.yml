@@ -1,8 +1,0 @@
-language: csharp
-solution: src/PortableWikiViewer.sln
-install:
-  - nuget restore src/PortableWikiViewer.sln
-  - nuget install NUnit.Runners -Version 2.6.4 -OutputDirectory tmp/testrunner
-script:
-  - ./build.sh
-  - ./test.sh
