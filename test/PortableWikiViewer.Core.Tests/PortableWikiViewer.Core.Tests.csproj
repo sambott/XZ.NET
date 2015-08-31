@@ -44,6 +44,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Crc32Tests.cs" />
+    <Compile Include="Crc64Tests.cs" />
     <Compile Include="XZStreamReaderTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
