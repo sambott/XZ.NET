@@ -1,12 +1,16 @@
 ﻿using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
 namespace PortableWikiViewer.Core
 {
-    public class Class1
+    public class XZStreamReader
     {
-        public static int Test = 1;
+        public XZStreamReader(Stream stream)
+        {
+
+        }
     }
 }
