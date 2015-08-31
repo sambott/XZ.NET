@@ -1,2 +1,8 @@
 language: csharp
 solution: src/PortableWikiViewer.sln
+install:
+  - nuget restore src/PortableWikiViewer.sln
+  - nuget install NUnit.Runners -Version 2.6.4 -OutputDirectory tmp/testrunner
+script:
+  - xbuild /p:Configuration=Release src/PortableWikiViewer.sln
+  - mono ./tmp/testrunner/NUnit.Runners.2.6.4/tools/nunit-console.exe ./test/*.Tests/bin/Release/*.Tests.dll

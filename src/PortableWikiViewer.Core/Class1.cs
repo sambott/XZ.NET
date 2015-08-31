@@ -7,5 +7,6 @@ namespace PortableWikiViewer.Core
 {
     public class Class1
     {
+        public static int Test = 1;
     }
 }
