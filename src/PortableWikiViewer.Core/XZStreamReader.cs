@@ -13,6 +13,8 @@ namespace PortableWikiViewer.Core
         {
             public long BlockStart { get; set; }
             public int BlockSize { get; set; }
+            public long? CompressedSize { get; set; }
+            public long? UncompressedSize { get; set; }
         }
 
         public enum CheckType : byte
@@ -37,6 +39,18 @@ namespace PortableWikiViewer.Core
             _streamStart = stream.Position;
             ProcessHeader();
             PreProcessBlocks();
+            ProcessIndex();
+            ProcessFooter();
+        }
+
+        private void ProcessFooter()
+        {
+            throw new NotImplementedException();
+        }
+
+        private void ProcessIndex()
+        {
+            throw new NotImplementedException();
         }
 
         private void PreProcessBlocks()
@@ -55,6 +69,13 @@ namespace PortableWikiViewer.Core
             var info = new BlockInfo();
             info.BlockStart = _reader.BaseStream.Position - 1;
             info.BlockSize = (blockSizeByte + 1) * 4;
+
+            var blockFlags = _reader.ReadByte();
+            byte filters = (byte)(blockFlags & 0x03);
+            byte reserved = (byte)(blockFlags & 0x3C);
+            byte compressedSizePresentByte = (byte)(blockFlags & 0x40);
+            byte uncompressedSizePresentByte = (byte)(blockFlags & 0x80);
+
             return info;
         }
 
