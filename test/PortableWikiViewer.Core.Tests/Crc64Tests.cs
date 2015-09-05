@@ -16,7 +16,7 @@ namespace PortableWikiViewer.Core.Tests
         private readonly byte[] SimpleBytes2 = Encoding.ASCII.GetBytes(SimpleString2);
 
         [Test]
-        public void IsoStaticDefaultSeedAndPolynomialWithShortAsciiString()
+        public void ShortAsciiString()
         {
             var actual = Crc64.Compute(SimpleBytes);
 
@@ -24,7 +24,7 @@ namespace PortableWikiViewer.Core.Tests
         }
 
         [Test]
-        public void IsoStaticDefaultSeedAndPolynomialWithShortAsciiString2()
+        public void ShortAsciiString2()
         {
             var actual = Crc64.Compute(SimpleBytes2);
 

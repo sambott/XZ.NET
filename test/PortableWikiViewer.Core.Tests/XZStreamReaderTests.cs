@@ -16,7 +16,7 @@ namespace PortableWikiViewer.Core.Tests
         [SetUp]
         public void BeforeEach()
         {
-            _compressedStream = new MemoryStream(_compressed);
+            _compressedStream = new MemoryStream(Compressed);
         }
 
         [TearDown]
@@ -34,14 +34,40 @@ namespace PortableWikiViewer.Core.Tests
         [Test]
         public void ChecksMagicNumberOnInitialiseFail()
         {
-            using (Stream bad_stream = new MemoryStream(new byte[] { 1, 2, 3, 4, 5 }))
+            using (Stream badStream = new MemoryStream(new byte[] { 1, 2, 3, 4, 5 }))
             {
-                Assert.Throws<InvalidDataException>(() => { new XZStreamReader(bad_stream); });
+                var ex = Assert.Throws<InvalidDataException>(() => { new XZStreamReader(badStream); });
+                Assert.That(ex.Message, Is.EqualTo("Invalid XZ Stream"));
             }
+        }
+
+        [Test]
+        public void CorruptHeaderThrows()
+        {
+            var bytes = Compressed.Clone() as byte[];
+            bytes[8]++;
+            using (Stream badFlagStream = new MemoryStream(bytes))
+            {
+                var ex = Assert.Throws<InvalidDataException>(() => { new XZStreamReader(badFlagStream); });
+                Assert.That(ex.Message, Is.EqualTo("Stream header corrupt"));
+            }
+        }
+
+        [Test]
+        public void ProcessesStreamHeader()
+        {
+            var xzsr = new XZStreamReader(_compressedStream);
+            Assert.That(xzsr.BlockCheckType, Is.EqualTo(XZStreamReader.CheckType.CRC64));
+        }
+
+        [Test]
+        public void ChecksBlocks()
+        {
+
         }
         
 
-        private readonly byte[] _compressed = new byte[] {
+        private byte[] Compressed { get; } = new byte[] {
             0xfd, 0x37, 0x7a, 0x58, 0x5a, 0x00, 0x00, 0x04, 0xe6, 0xd6, 0xb4, 0x46, 0x02, 0x00, 0x21, 0x01,
             0x16, 0x00, 0x00, 0x00, 0x74, 0x2f, 0xe5, 0xa3, 0xe0, 0x01, 0xe4, 0x01, 0x3c, 0x5d, 0x00, 0x26,
             0x98, 0x4a, 0x47, 0xc6, 0x6a, 0x27, 0xd7, 0x36, 0x7a, 0x05, 0xb9, 0x4f, 0xd7, 0xde, 0x52, 0x4c,
@@ -67,14 +93,9 @@ namespace PortableWikiViewer.Core.Tests
             0xc6, 0xc7, 0xd7, 0x24, 0x00, 0x01, 0xd8, 0x02, 0xe5, 0x03, 0x00, 0x00, 0xac, 0x16, 0x1f, 0xa4,
             0xb1, 0xc4, 0x67, 0xfb, 0x02, 0x00, 0x00, 0x00, 0x00, 0x04, 0x59, 0x5a
         };
-        private byte[] originalBytes {
-            get
-            {
-                return Encoding.ASCII.GetBytes(_original);
-            }
-        }
+        private byte[] OriginalBytes => Encoding.ASCII.GetBytes(Original);
 
-        private readonly string _original =
+        private string Original { get; } =
 @"Mary had a little lamb,
 His fleece was white as snow,
 And everywhere that Mary went,
