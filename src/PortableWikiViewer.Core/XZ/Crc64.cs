@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PortableWikiViewer.Core
+namespace PortableWikiViewer.Core.XZ
 {
     public static class Crc64
     {

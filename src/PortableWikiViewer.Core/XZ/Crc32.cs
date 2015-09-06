@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace PortableWikiViewer.Core
+namespace PortableWikiViewer.Core.XZ
 {
     internal static class Crc32
     {

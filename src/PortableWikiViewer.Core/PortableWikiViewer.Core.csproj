@@ -37,9 +37,14 @@
     <!-- A reference to the entire .NET Framework is automatically included -->
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Crc32.cs" />
-    <Compile Include="Crc64.cs" />
-    <Compile Include="XZStreamReader.cs" />
+    <Compile Include="BinaryUtils.cs" />
+    <Compile Include="XZ\Filters\BlockFilter.cs" />
+    <Compile Include="XZ\BlockInfo.cs" />
+    <Compile Include="XZ\Crc32.cs" />
+    <Compile Include="XZ\Crc64.cs" />
+    <Compile Include="XZ\Filters\Lzma2Filter.cs" />
+    <Compile Include="XZ\MultiByteIntegers.cs" />
+    <Compile Include="XZ\XZStreamReader.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />

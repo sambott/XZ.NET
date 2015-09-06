@@ -5,10 +5,10 @@ using System.Security.Cryptography;
 using NUnit.Framework;
 using PortableWikiViewer.Core;
 
-namespace PortableWikiViewer.Core.Tests
+namespace PortableWikiViewer.Core.XZ.Tests
 {
     [TestFixture]
-    public class Crc64Tests
+    public class Crc32Tests
     {
         private const string SimpleString = @"The quick brown fox jumps over the lazy dog.";
         private readonly byte[] SimpleBytes = Encoding.ASCII.GetBytes(SimpleString);
@@ -18,17 +18,17 @@ namespace PortableWikiViewer.Core.Tests
         [Test]
         public void ShortAsciiString()
         {
-            var actual = Crc64.Compute(SimpleBytes);
+            var actual = Crc32.Compute(SimpleBytes);
 
-            Assert.AreEqual((UInt64)0x7E210EB1B03E5A1D, actual);
+            Assert.AreEqual((UInt32)0x519025e9, actual);
         }
 
         [Test]
         public void ShortAsciiString2()
         {
-            var actual = Crc64.Compute(SimpleBytes2);
+            var actual = Crc32.Compute(SimpleBytes2);
 
-            Assert.AreEqual((UInt64)0x416B4150508661EE, actual);
+            Assert.AreEqual((UInt32)0x6ee3ad88, actual);
         }
 
     }
