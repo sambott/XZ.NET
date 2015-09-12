@@ -56,15 +56,5 @@ namespace PortableWikiViewer.Core.XZ
             return crc;
         }
 
-        static byte[] UInt32ToBigEndianBytes(UInt32 uint32)
-        {
-            var result = BitConverter.GetBytes(uint32);
-
-            if (BitConverter.IsLittleEndian)
-                Array.Reverse(result);
-
-            return result;
-        }
-
     }
 }

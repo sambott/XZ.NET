@@ -6,7 +6,7 @@ using System.Text;
 using PortableWikiViewer.Core.XZ.Filters;
 
 namespace PortableWikiViewer.Core.XZ
-{
+{/*
     public class XZStreamReader
     {
         public enum CheckType : byte
@@ -157,5 +157,5 @@ namespace PortableWikiViewer.Core.XZ
             if (!Enumerable.SequenceEqual(header, MagicHeader))
                 throw new InvalidDataException("Invalid XZ Stream");
         }
-    }
+    }*/
 }
