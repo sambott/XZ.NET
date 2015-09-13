@@ -39,13 +39,14 @@
   <ItemGroup>
     <Compile Include="BinaryUtils.cs" />
     <Compile Include="XZ\Filters\BlockFilter.cs" />
-    <Compile Include="XZ\BlockInfo.cs" />
     <Compile Include="XZ\Crc32.cs" />
     <Compile Include="XZ\Crc64.cs" />
     <Compile Include="XZ\Filters\Lzma2Filter.cs" />
     <Compile Include="XZ\MultiByteIntegers.cs" />
     <Compile Include="XZ\XZHeader.cs" />
-    <Compile Include="XZ\XZStreamReader.cs" />
+    <Compile Include="XZ\XZBlock.cs" />
+    <Compile Include="XZ\XZIndexMarkerReachedException.cs" />
+    <Compile Include="XZ\XZStream.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />

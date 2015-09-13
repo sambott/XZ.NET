@@ -45,9 +45,11 @@
   <ItemGroup>
     <Compile Include="XZ\Crc32Tests.cs" />
     <Compile Include="XZ\Crc64Tests.cs" />
+    <Compile Include="XZ\Filters\LZMA2Tests.cs" />
+    <Compile Include="XZ\XZBlockTests.cs" />
     <Compile Include="XZ\XZTestsBase.cs" />
     <Compile Include="XZ\XZHeaderTests.cs" />
-    <Compile Include="XZ\XZStreamReaderTests.cs" />
+    <Compile Include="XZ\XZStreamTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

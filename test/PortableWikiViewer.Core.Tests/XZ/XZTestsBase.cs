@@ -12,7 +12,11 @@ namespace PortableWikiViewer.Core.XZ.Tests
     public abstract class XZTestsBase
     {
         [SetUp]
-        public void RewindStream()
+        public void BaseBeforeEach()
+        {
+            Rewind();
+        }
+        protected virtual void Rewind()
         {
             CompressedStream.Position = 0;
         }

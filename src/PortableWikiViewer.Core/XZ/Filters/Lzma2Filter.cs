@@ -13,7 +13,7 @@ namespace PortableWikiViewer.Core.XZ.Filters
         public override bool ChangesDataSize => true;
 
         byte _dictionarySize;
-        uint DictionarySize
+        internal uint DictionarySize
         {
             get
             {

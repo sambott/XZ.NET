@@ -23,25 +23,13 @@ namespace PortableWikiViewer.Core.XZ.Tests
         }
 
         [Test]
-        public void ChecksMagicNumberOnInitialise()
+        public void ChecksMagicNumber()
         {
             var bytes = Compressed.Clone() as byte[];
             bytes[3]++;
             using (Stream badMagicNumberStream = new MemoryStream(bytes))
             {
                 BinaryReader br = new BinaryReader(badMagicNumberStream);
-                var header = new XZHeader(br);
-                var ex = Assert.Throws<InvalidDataException>(() => { header.Process(); });
-                Assert.That(ex.Message, Is.EqualTo("Invalid XZ Stream"));
-            }
-        }
-
-        [Test]
-        public void ChecksMagicNumberOnProcessFail()
-        {
-            using (Stream badStream = new MemoryStream(new byte[] { 1, 2, 3, 4, 5 }))
-            {
-                BinaryReader br = new BinaryReader(badStream);
                 var header = new XZHeader(br);
                 var ex = Assert.Throws<InvalidDataException>(() => { header.Process(); });
                 Assert.That(ex.Message, Is.EqualTo("Invalid XZ Stream"));
@@ -84,7 +72,7 @@ namespace PortableWikiViewer.Core.XZ.Tests
             BinaryReader br = new BinaryReader(CompressedStream);
             var header = new XZHeader(br);
             header.Process();
-            Assert.That(header.BlockCheckType, Is.EqualTo(XZHeader.CheckType.CRC64));
+            Assert.That(header.BlockCheckType, Is.EqualTo(CheckType.CRC64));
         }
 
         [Test]
@@ -100,7 +88,7 @@ namespace PortableWikiViewer.Core.XZ.Tests
         public void ProcessesStreamHeaderFromFactory()
         {
             var header = XZHeader.FromStream(CompressedStream);
-            Assert.That(header.BlockCheckType, Is.EqualTo(XZHeader.CheckType.CRC64));
+            Assert.That(header.BlockCheckType, Is.EqualTo(CheckType.CRC64));
         }
     }
 }

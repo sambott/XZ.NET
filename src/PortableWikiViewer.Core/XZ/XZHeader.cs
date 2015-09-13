@@ -7,14 +7,6 @@ namespace PortableWikiViewer.Core.XZ
 {
     public class XZHeader
     {
-        public enum CheckType : byte
-        {
-            NONE = 0x00,
-            CRC32 = 0x01,
-            CRC64 = 0x04,
-            SHA256 = 0x0A
-        }
-
         private readonly BinaryReader _reader;
         private readonly byte[] MagicHeader = { 0xFD, 0x37, 0x7A, 0x58, 0x5a, 0x00 };
         public long StreamStartPosition { get; private set; }
@@ -27,6 +19,7 @@ namespace PortableWikiViewer.Core.XZ
             _reader = reader;
             StreamStartPosition = reader.BaseStream.Position;
         }
+
         public static XZHeader FromStream(Stream stream)
         {
             var header = new XZHeader(new BinaryReader(stream, Encoding.UTF8, true));
