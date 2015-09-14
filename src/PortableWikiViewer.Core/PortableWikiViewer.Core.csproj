@@ -38,6 +38,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BinaryUtils.cs" />
+    <Compile Include="ReadOnlyStream.cs" />
     <Compile Include="XZ\Filters\BlockFilter.cs" />
     <Compile Include="XZ\Crc32.cs" />
     <Compile Include="XZ\Crc64.cs" />

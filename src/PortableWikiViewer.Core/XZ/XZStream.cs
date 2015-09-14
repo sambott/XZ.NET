@@ -15,7 +15,7 @@ namespace PortableWikiViewer.Core.XZ
         SHA256 = 0x0A
     }
 
-    public sealed class XZStream : Stream
+    public sealed class XZStream : ReadOnlyStream
     {
         private void AssertBlockCheckTypeIsSupported()
         {
@@ -33,46 +33,20 @@ namespace PortableWikiViewer.Core.XZ
                     throw new NotSupportedException("Check Type unknown to this version of decoder.");
             }
         }
-
-        public Stream BaseStream { get; private set; }
         public XZHeader Header { get; private set; }
-
-        public override bool CanRead => BaseStream.CanRead && !_endOfStream;
-
-        public override bool CanSeek => false;
-
-        public override bool CanWrite => false;
-
-        public override long Length
-        {
-            get
-            {
-                throw new NotSupportedException();
-            }
-        }
-
-        public override long Position
-        {
-            get
-            {
-                return BaseStream.Position;
-            }
-
-            set
-            {
-                throw new NotSupportedException();
-            }
-        }
+        public bool HeaderIsRead { get; private set; }
 
         bool _endOfStream;
 
-        public XZStream(Stream stream)
+        public XZStream(Stream stream) : base(stream)
         {
-            BaseStream = stream;
-            if (!BaseStream.CanRead)
-                throw new InvalidDataException("Must be able to read from stream");
+        }
+
+        private void ReadHeader()
+        {
             Header = XZHeader.FromStream(BaseStream);
             AssertBlockCheckTypeIsSupported();
+            HeaderIsRead = true;
         }
 
         private void ProcessBlocks()
@@ -92,36 +66,20 @@ namespace PortableWikiViewer.Core.XZ
 
         public override int Read(byte[] buffer, int offset, int count)
         {
-            //if (_endOfStream)
+            int bytesRead = 0;
+            if (_endOfStream)
                 throw new EndOfStreamException();
-           /* try
+            try
             {
-                return BaseStream.Read(buffer, offset, count);
+                if (!HeaderIsRead)
+                    ReadHeader();
+                bytesRead = BaseStream.Read(buffer, offset, count);//TODO
             }
             catch (EndOfStreamException)
             {
                 _endOfStream = true;
-            }*/
-        }
-
-        public override void Flush()
-        {
-            throw new NotSupportedException();
-        }
-
-        public override long Seek(long offset, SeekOrigin origin)
-        {
-            throw new NotSupportedException();
-        }
-
-        public override void SetLength(long value)
-        {
-            throw new NotSupportedException();
-        }
-
-        public override void Write(byte[] buffer, int offset, int count)
-        {
-            throw new NotSupportedException();
+            }
+            return bytesRead;
         }
     }
 }

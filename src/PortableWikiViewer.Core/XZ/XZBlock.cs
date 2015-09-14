@@ -2,30 +2,25 @@
 using System.IO;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using PortableWikiViewer.Core.XZ.Filters;
 
 namespace PortableWikiViewer.Core.XZ
 {
-    public sealed class XZBlock
+    public sealed class XZBlock : ReadOnlyStream
     {
-        public long StreamStartPosition { get; set; }
         public int BlockHeaderSize { get; set; }
         public ulong? CompressedSize { get; set; }
         public ulong? UncompressedSize { get; set; }
         public List<BlockFilter> Filters { get; set; } = new List<BlockFilter>();
-        public bool HeaderLoaded { get; private set; }
-
-        private readonly BinaryReader _reader;
+        public bool HeaderIsLoaded { get; private set; }
+        
         private int _numFilters;
 
-        public XZBlock(Stream stream)
+        public XZBlock(Stream stream) : base(stream)
         {
-            _reader = new BinaryReader(stream, Encoding.UTF8, true);
-            StreamStartPosition = _reader.BaseStream.Position;
         }
 
-        public void LoadHeader()
+        private void LoadHeader()
         {
             byte[] headerCache = CacheHeader();
 
@@ -36,12 +31,12 @@ namespace PortableWikiViewer.Core.XZ
                 ReadBlockFlags(cachedReader);
                 ReadFilters(cachedReader);
             }
-            HeaderLoaded = true;
+            HeaderIsLoaded = true;
         }
 
         private byte ReadHeaderSize()
         {
-            var blockHeaderSizeByte = _reader.ReadByte();
+            var blockHeaderSizeByte = (byte)BaseStream.ReadByte();
             if (blockHeaderSizeByte == 0)
                 throw new XZIndexMarkerReachedException();
             BlockHeaderSize = (blockHeaderSizeByte + 1) * 4;
@@ -54,9 +49,11 @@ namespace PortableWikiViewer.Core.XZ
 
             byte[] blockHeaderWithoutCrc = new byte[BlockHeaderSize - 4];
             blockHeaderWithoutCrc[0] = blockHeaderSizeByte;
-            _reader.ReadBytes(BlockHeaderSize - 5).CopyTo(blockHeaderWithoutCrc, 1);
+            var read = BaseStream.Read(blockHeaderWithoutCrc, 1, BlockHeaderSize - 5);
+            if (read != BlockHeaderSize - 5)
+                throw new EndOfStreamException("Reached end of stream unexectedly");
 
-            uint crc = _reader.ReadLittleEndianUInt32();
+            uint crc = BaseStream.ReadLittleEndianUInt32();
             uint calcCrc = Crc32.Compute(blockHeaderWithoutCrc);
             if (crc != calcCrc)
                 throw new InvalidDataException("Block header corrupt");
@@ -104,6 +101,14 @@ namespace PortableWikiViewer.Core.XZ
                 CompressedSize = reader.ReadXZInteger();
             if (uncompressedSizePresent)
                 UncompressedSize = reader.ReadXZInteger();
+        }
+
+        public override int Read(byte[] buffer, int offset, int count)
+        {
+            int bytesRead = 0;
+            if (!HeaderIsLoaded)
+                LoadHeader();
+            return bytesRead;
         }
     }
 }

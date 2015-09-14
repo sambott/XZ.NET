@@ -11,6 +11,15 @@ namespace PortableWikiViewer.Core.XZ.Tests
     [TestFixture]
     public class XZBlockTests : XZTestsBase
     {
+        private byte[] ReadBytes(XZBlock block, int bytesToRead)
+        {
+            byte[] buffer = new byte[bytesToRead];
+            var read = block.Read(buffer, 0, bytesToRead);
+            if (read != bytesToRead)
+                throw new EndOfStreamException();
+            return buffer;
+        }
+
         [Test]
         public void RecordsStreamStartOnInit()
         {
@@ -22,16 +31,13 @@ namespace PortableWikiViewer.Core.XZ.Tests
         }
 
         [Test]
-        public void OnProcess()
+        public void OnFindIndexBlockThrow()
         {
-            var bytes = Compressed.Clone() as byte[];
-            bytes[3]++;
-            using (Stream badMagicNumberStream = new MemoryStream(bytes))
+            var bytes = new byte[] { 0 };
+            using (Stream indexBlockStream = new MemoryStream(bytes))
             {
-                BinaryReader br = new BinaryReader(badMagicNumberStream);
-                var header = new XZHeader(br);
-                var ex = Assert.Throws<InvalidDataException>(() => { header.Process(); });
-                Assert.That(ex.Message, Is.EqualTo("Invalid XZ Stream"));
+                var XZBlock = new XZBlock(indexBlockStream);
+                Assert.Throws<XZIndexMarkerReachedException>(() => { ReadBytes(XZBlock, 1); });
             }
         }
     }
