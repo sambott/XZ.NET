@@ -8,7 +8,7 @@ using System.Reflection;
 
 namespace PortableWikiViewer.Core.XZ.Filters
 {
-    public abstract class BlockFilter
+    public abstract class BlockFilter : ReadOnlyStream
     {
         public enum FilterTypes : ulong
         {
@@ -37,7 +37,7 @@ namespace PortableWikiViewer.Core.XZ.Filters
         public abstract void ValidateFilter();
 
         public FilterTypes FilterType { get; set; }
-        internal static BlockFilter Read(BinaryReader reader)
+        public static BlockFilter Read(BinaryReader reader)
         {
             var filterType = (FilterTypes)reader.ReadXZInteger();
             if (!FilterMap.ContainsKey(filterType))
@@ -51,5 +51,7 @@ namespace PortableWikiViewer.Core.XZ.Filters
             filter.Init(properties);
             return filter;
         }
+
+        public abstract void SetBaseStream(Stream stream);
     }
 }

@@ -15,7 +15,7 @@ namespace PortableWikiViewer.Core.XZ
         SHA256 = 0x0A
     }
 
-    public sealed class XZStream : ReadOnlyStream
+    public sealed class XZStream : XZReadOnlyStream
     {
         private void AssertBlockCheckTypeIsSupported()
         {

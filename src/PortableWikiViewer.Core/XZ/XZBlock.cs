@@ -6,22 +6,83 @@ using PortableWikiViewer.Core.XZ.Filters;
 
 namespace PortableWikiViewer.Core.XZ
 {
-    public sealed class XZBlock : ReadOnlyStream
+    public sealed class XZBlock : XZReadOnlyStream
     {
-        public int BlockHeaderSize { get; set; }
-        public ulong? CompressedSize { get; set; }
-        public ulong? UncompressedSize { get; set; }
-        public List<BlockFilter> Filters { get; set; } = new List<BlockFilter>();
+        public int BlockHeaderSize => (_blockHeaderSizeByte + 1) * 4;
+        public ulong? CompressedSize { get; private set; }
+        public ulong? UncompressedSize { get; private set; }
+        public Stack<BlockFilter> Filters { get; private set; } = new Stack<BlockFilter>();
         public bool HeaderIsLoaded { get; private set; }
-        
+        private CheckType _checkType;
+        private int _checkSize;
+        private bool _streamConnected;
         private int _numFilters;
+        private byte _blockHeaderSizeByte;
+        private Stream _decomStream;
+        private bool _endOfStream;
+        private bool _paddingSkipped;
+        private bool _crcChecked;
 
-        public XZBlock(Stream stream) : base(stream)
+        public XZBlock(Stream stream, CheckType checkType, int checkSize) : base(stream)
         {
+            _checkType = checkType;
+            _checkSize = checkSize;
+        }
+
+        public override int Read(byte[] buffer, int offset, int count)
+        {
+            int bytesRead = 0;
+            if (!HeaderIsLoaded)
+                LoadHeader();
+            if (!_streamConnected)
+                ConnectStream();
+            if (!_endOfStream)
+                bytesRead = _decomStream.Read(buffer, offset, count);
+            if (bytesRead != count)
+                _endOfStream = true;
+            if (_endOfStream && !_paddingSkipped)
+                SkipPadding();
+            if (_endOfStream && !_crcChecked)
+                CheckCrc();
+            return bytesRead;
+        }
+
+        private void SkipPadding()
+        {
+            int padding = (int)(BaseStream.Position - StreamStartPosition) % 4;
+            if (padding > 0)
+            {
+                byte[] paddingBytes = new byte[padding];
+                BaseStream.Read(paddingBytes, 0, padding);
+                if (paddingBytes.Any(b => b != 0))
+                    throw new InvalidDataException("Padding bytes were non-null");
+            }
+            _paddingSkipped = true;
+        }
+
+        private void CheckCrc()
+        {
+            byte[] crc = new byte[_checkSize];
+            BaseStream.Read(crc, 0, _checkSize);
+            // Actually do a check (and read in the bytes
+            //   into the function throughout the stream read.
+            _crcChecked = true;
+        }
+
+        private void ConnectStream()
+        {
+            _decomStream = BaseStream;
+            while (Filters.Any())
+            {
+                var filter = Filters.Pop();
+                filter.SetBaseStream(_decomStream);
+                _decomStream = filter;
+            }
         }
 
         private void LoadHeader()
         {
+            ReadHeaderSize();
             byte[] headerCache = CacheHeader();
 
             using (var cache = new MemoryStream(headerCache))
@@ -34,21 +95,17 @@ namespace PortableWikiViewer.Core.XZ
             HeaderIsLoaded = true;
         }
 
-        private byte ReadHeaderSize()
+        private void ReadHeaderSize()
         {
-            var blockHeaderSizeByte = (byte)BaseStream.ReadByte();
-            if (blockHeaderSizeByte == 0)
+            _blockHeaderSizeByte = (byte)BaseStream.ReadByte();
+            if (_blockHeaderSizeByte == 0)
                 throw new XZIndexMarkerReachedException();
-            BlockHeaderSize = (blockHeaderSizeByte + 1) * 4;
-            return blockHeaderSizeByte;
         }
 
         private byte[] CacheHeader()
         {
-            byte blockHeaderSizeByte = ReadHeaderSize();
-
             byte[] blockHeaderWithoutCrc = new byte[BlockHeaderSize - 4];
-            blockHeaderWithoutCrc[0] = blockHeaderSizeByte;
+            blockHeaderWithoutCrc[0] = _blockHeaderSizeByte;
             var read = BaseStream.Read(blockHeaderWithoutCrc, 1, BlockHeaderSize - 5);
             if (read != BlockHeaderSize - 5)
                 throw new EndOfStreamException("Reached end of stream unexectedly");
@@ -59,30 +116,6 @@ namespace PortableWikiViewer.Core.XZ
                 throw new InvalidDataException("Block header corrupt");
 
             return blockHeaderWithoutCrc;
-        }
-
-        private void ReadFilters(BinaryReader reader, long baseStreamOffset = 0)
-        {
-            int nonLastSizeChangers = 0;
-            for (int i = 0; i < _numFilters; i++)
-            {
-                var filter = BlockFilter.Read(reader);
-                if ((i + 1 == _numFilters && !filter.AllowAsLast)
-                    || (i + 1 < _numFilters && !filter.AllowAsNonLast))
-                    throw new InvalidDataException("Block Filters in bad order");
-                if (filter.ChangesDataSize && i + 1 < _numFilters)
-                    nonLastSizeChangers++;
-                filter.ValidateFilter();
-                Filters.Add(filter);
-            }
-            if (nonLastSizeChangers > 2)
-                throw new InvalidDataException("More than two non-last block filters cannot change stream size");
-
-            int blockHeaderPaddingSize = BlockHeaderSize -
-                (4 + (int)(reader.BaseStream.Position - baseStreamOffset));
-            byte[] blockHeaderPadding = reader.ReadBytes(blockHeaderPaddingSize);
-            if (!blockHeaderPadding.All(b => b == 0))
-                throw new InvalidDataException("Block header contains unknown fields");
         }
 
         private void ReadBlockFlags(BinaryReader reader)
@@ -103,12 +136,28 @@ namespace PortableWikiViewer.Core.XZ
                 UncompressedSize = reader.ReadXZInteger();
         }
 
-        public override int Read(byte[] buffer, int offset, int count)
+        private void ReadFilters(BinaryReader reader, long baseStreamOffset = 0)
         {
-            int bytesRead = 0;
-            if (!HeaderIsLoaded)
-                LoadHeader();
-            return bytesRead;
+            int nonLastSizeChangers = 0;
+            for (int i = 0; i < _numFilters; i++)
+            {
+                var filter = BlockFilter.Read(reader);
+                if ((i + 1 == _numFilters && !filter.AllowAsLast)
+                    || (i + 1 < _numFilters && !filter.AllowAsNonLast))
+                    throw new InvalidDataException("Block Filters in bad order");
+                if (filter.ChangesDataSize && i + 1 < _numFilters)
+                    nonLastSizeChangers++;
+                filter.ValidateFilter();
+                Filters.Push(filter);
+            }
+            if (nonLastSizeChangers > 2)
+                throw new InvalidDataException("More than two non-last block filters cannot change stream size");
+
+            int blockHeaderPaddingSize = BlockHeaderSize -
+                (4 + (int)(reader.BaseStream.Position - baseStreamOffset));
+            byte[] blockHeaderPadding = reader.ReadBytes(blockHeaderPaddingSize);
+            if (!blockHeaderPadding.All(b => b == 0))
+                throw new InvalidDataException("Block header contains unknown fields");
         }
     }
 }

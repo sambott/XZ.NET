@@ -14,11 +14,11 @@ namespace PortableWikiViewer.Core.XZ.Tests
         [SetUp]
         public void BaseBeforeEach()
         {
-            Rewind();
+            Rewind(CompressedStream);
         }
-        protected virtual void Rewind()
+        protected virtual void Rewind(Stream stream)
         {
-            CompressedStream.Position = 0;
+            stream.Position = 0;
         }
 
         protected Stream CompressedStream { get; } = new MemoryStream(Compressed);  

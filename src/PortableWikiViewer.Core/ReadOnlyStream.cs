@@ -5,11 +5,9 @@ namespace PortableWikiViewer.Core
 {
     public abstract class ReadOnlyStream : Stream
     {
-        public Stream BaseStream { get; private set; }
+        public Stream BaseStream { get; protected set; }
 
-        public long StreamStartPosition { get; set; }
-
-        public override bool CanRead => BaseStream.CanRead && !_endOfStream;
+        public override bool CanRead => BaseStream.CanRead;
 
         public override bool CanSeek => false;
 
@@ -35,16 +33,6 @@ namespace PortableWikiViewer.Core
                 throw new NotSupportedException();
             }
         }
-
-        bool _endOfStream;
-
-        public ReadOnlyStream(Stream stream)
-        {
-            BaseStream = stream;
-            if (!BaseStream.CanRead)
-                throw new InvalidDataException("Must be able to read from stream");
-            StreamStartPosition = BaseStream.Position;
-    }
 
         public override void Flush()
         {

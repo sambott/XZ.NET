@@ -10,7 +10,7 @@ using PortableWikiViewer.Core.XZ.Filters;
 namespace PortableWikiViewer.Core.Tests.XZ.Filters
 {
     [TestFixture]
-    public class LZMA2Tests
+    public class Lzma2Tests
     {
         Lzma2Filter filter;
 

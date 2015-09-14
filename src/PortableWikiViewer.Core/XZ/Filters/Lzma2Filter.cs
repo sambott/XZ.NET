@@ -43,5 +43,15 @@ namespace PortableWikiViewer.Core.XZ.Filters
         public override void ValidateFilter()
         {
         }
+
+        public override void SetBaseStream(Stream stream)
+        {
+            BaseStream = new SharpCompress.Compressor.LZMA.LzmaStream(new[] { _dictionarySize }, stream);
+        }
+
+        public override int Read(byte[] buffer, int offset, int count)
+        {
+            return BaseStream.Read(buffer, offset, count);
+        }
     }
 }

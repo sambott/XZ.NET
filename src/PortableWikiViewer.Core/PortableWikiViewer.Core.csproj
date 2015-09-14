@@ -34,9 +34,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <!-- A reference to the entire .NET Framework is automatically included -->
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="BinaryUtils.cs" />
     <Compile Include="ReadOnlyStream.cs" />
     <Compile Include="XZ\Filters\BlockFilter.cs" />
@@ -47,8 +44,18 @@
     <Compile Include="XZ\XZHeader.cs" />
     <Compile Include="XZ\XZBlock.cs" />
     <Compile Include="XZ\XZIndexMarkerReachedException.cs" />
+    <Compile Include="XZ\XZReadOnlyStream.cs" />
     <Compile Include="XZ\XZStream.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="SharpCompress, Version=0.10.3.0, Culture=neutral, PublicKeyToken=beaf6f427e128133, processorArchitecture=MSIL">
+      <HintPath>..\packages\sharpcompress.0.11.1\lib\portable-net4+sl5+wp8+win8\SharpCompress.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
