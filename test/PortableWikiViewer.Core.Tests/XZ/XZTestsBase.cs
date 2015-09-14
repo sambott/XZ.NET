@@ -52,24 +52,24 @@ namespace PortableWikiViewer.Core.XZ.Tests
         protected static byte[] OriginalBytes => Encoding.ASCII.GetBytes(Original);
 
         protected static string Original { get; } =
-@"Mary had a little lamb,
-His fleece was white as snow,
-And everywhere that Mary went,
-The lamb was sure to go.
-
-He followed her to school one day,
-Which was against the rule,
-It made the children laugh and play
-To see a lamb at school.
-
-And so the teacher turned it out,
-But still it lingered near,
-And waited patiently about,
-Till Mary did appear.
-
-" + "\"Why does the lamb love Mary so?\"" + @"
-The eager children cry.
-" + "\"Why, Mary loves the lamb, you know.\"" + @"
-The teacher did reply.";
+            "Mary had a little lamb,\r\n" +
+            "His fleece was white as snow,\r\n" +
+            "And everywhere that Mary went,\r\n" +
+            "The lamb was sure to go.\r\n" +
+            "\r\n" +
+            "He followed her to school one day,\r\n" +
+            "Which was against the rule,\r\n" +
+            "It made the children laugh and play\r\n" +
+            "To see a lamb at school.\r\n" +
+            "\r\n" +
+            "And so the teacher turned it out,\r\n" +
+            "But still it lingered near,\r\n" +
+            "And waited patiently about,\r\n" +
+            "Till Mary did appear.\r\n" +
+            "\r\n" +
+            "\"Why does the lamb love Mary so?\"\r\n" +
+            "The eager children cry.\r\n" +
+            "\"Why, Mary loves the lamb, you know.\"\r\n" +
+            "The teacher did reply.";
     }
 }
