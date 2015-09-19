@@ -46,6 +46,7 @@
     <Compile Include="XZ\Crc32Tests.cs" />
     <Compile Include="XZ\Crc64Tests.cs" />
     <Compile Include="XZ\Filters\Lzma2Tests.cs" />
+    <Compile Include="XZ\XZIndexTests.cs" />
     <Compile Include="XZ\XZBlockTests.cs" />
     <Compile Include="XZ\XZTestsBase.cs" />
     <Compile Include="XZ\XZHeaderTests.cs" />

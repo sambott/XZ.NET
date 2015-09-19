@@ -71,6 +71,15 @@ namespace PortableWikiViewer.Core.XZ.Tests
         public void CanReadMary()
         {
             var XZBlock = new XZBlock(CompressedStream, CheckType.CRC64, 8);
+            Assert.That(Encoding.ASCII.GetBytes("M"), Is.EqualTo(ReadBytes(XZBlock, 1)));
+            Assert.That(Encoding.ASCII.GetBytes("a"), Is.EqualTo(ReadBytes(XZBlock, 1)));
+            Assert.That(Encoding.ASCII.GetBytes("ry"), Is.EqualTo(ReadBytes(XZBlock, 2)));
+        }
+
+        [Test]
+        public void CanReadPoemWithStreamReader()
+        {
+            var XZBlock = new XZBlock(CompressedStream, CheckType.CRC64, 8);
             var sr = new StreamReader(XZBlock);
             Assert.That(sr.ReadToEnd(), Is.EqualTo(Original));
         }

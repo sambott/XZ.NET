@@ -65,7 +65,7 @@ namespace PortableWikiViewer.Core.XZ
             byte[] crc = new byte[_checkSize];
             BaseStream.Read(crc, 0, _checkSize);
             // Actually do a check (and read in the bytes
-            //   into the function throughout the stream read.
+            //   into the function throughout the stream read).
             _crcChecked = true;
         }
 
@@ -78,6 +78,7 @@ namespace PortableWikiViewer.Core.XZ
                 filter.SetBaseStream(_decomStream);
                 _decomStream = filter;
             }
+            _streamConnected = true;
         }
 
         private void LoadHeader()

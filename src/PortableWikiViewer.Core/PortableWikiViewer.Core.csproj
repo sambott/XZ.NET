@@ -41,9 +41,11 @@
     <Compile Include="XZ\Crc64.cs" />
     <Compile Include="XZ\Filters\Lzma2Filter.cs" />
     <Compile Include="XZ\MultiByteIntegers.cs" />
+    <Compile Include="XZ\XZIndex.cs" />
     <Compile Include="XZ\XZHeader.cs" />
     <Compile Include="XZ\XZBlock.cs" />
     <Compile Include="XZ\XZIndexMarkerReachedException.cs" />
+    <Compile Include="XZ\XZIndexRecord.cs" />
     <Compile Include="XZ\XZReadOnlyStream.cs" />
     <Compile Include="XZ\XZStream.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
