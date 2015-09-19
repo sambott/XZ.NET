@@ -6,14 +6,14 @@ using System.Threading.Tasks;
 
 namespace XZ.Net.Filters
 {
-    class Lzma2Filter : BlockFilter
+    public class Lzma2Filter : BlockFilter
     {
         public override bool AllowAsLast => true;
         public override bool AllowAsNonLast => false;
         public override bool ChangesDataSize => true;
 
         byte _dictionarySize;
-        internal uint DictionarySize
+        public uint DictionarySize
         {
             get
             {

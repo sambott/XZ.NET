@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace XZ.Net
 {
-    internal static class Crc32
+    public static class Crc32
     {
         public const UInt32 DefaultPolynomial = 0xedb88320u;
         public const UInt32 DefaultSeed = 0xffffffffu;
