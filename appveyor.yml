@@ -1,6 +1,6 @@
 version: 0.1.{build}
 before_build:
-- nuget restore src/PortableWikiViewer.sln
+- nuget restore src/XZ.NET.sln
 build:
-  project: src/PortableWikiViewer.sln
+  project: src/XZ.NET.sln
   verbosity: minimal
