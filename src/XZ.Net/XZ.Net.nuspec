@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 <package >
   <metadata>
-    <id>$id$</id>
-    <version>$version$</version>
-    <title>$title$</title>
+    <id>XZ.Net.Portable</id>
+    <version>1.0.0-beta0</version>
+    <title>$title$ Portable Class Library</title>
     <authors>$author$</authors>
     <owners>$author$</owners>
     <licenseUrl>http://choosealicense.com/licenses/gpl-2.0/</licenseUrl>
