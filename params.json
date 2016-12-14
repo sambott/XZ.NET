@@ -1,0 +1,6 @@
+{
+  "name": "Xz.net",
+  "tagline": ".NET implementation of XZ as a StreamReader",
+  "body": "# XZ.Net\r\n\r\nAn implementation of XZ in C#.\r\n\r\n[![Build status](https://ci.appveyor.com/api/projects/status/u1uycgnxrb9x4csy/branch/master?svg=true)](https://ci.appveyor.com/project/sambott/xz-net/branch/master)\r\n\r\n## Installation\r\n    Install-Package XZ.Net.Portable -Pre\r\n\r\n## Usage\r\n * See XZStream tests",
+  "note": "Don't delete this file! It's used internally to help with page regeneration."
+}
