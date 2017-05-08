@@ -9,6 +9,8 @@ build_script:
 - msbuild.exe /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll" /p:Version=%APPVEYOR_BUILD_VERSION% /v:minimal /t:build
 after_build:
 - msbuild.exe /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll" /p:Version=%APPVEYOR_BUILD_VERSION%;IncludeSymbols=true;IncludeSource=true /v:minimal /t:pack
+test_script:
+- dotnet test --test-adapter-path:. --logger:Appveyor test\XZ.Net.Tests\XZ.Net.Tests.csproj
 artifacts:
 - path: '**\*.nupkg'
 cache:
