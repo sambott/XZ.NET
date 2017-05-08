@@ -1,0 +1,45 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.26403.7
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{87EC90AB-2250-4683-8D6D-DAD2B85F8619}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{4AAD29EC-2969-494A-B499-7ED3934A4E1F}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XZ.Net", "src\XZ.Net\XZ.Net.csproj", "{772A7B58-697C-4700-83B9-E0D93A4A81CC}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XZ.Net.Tests", "test\XZ.Net.Tests\XZ.Net.Tests.csproj", "{5D21E24C-A566-4EC5-900C-42940B90B06B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{51384459-9203-44FE-B93C-19C084A9CA9C}"
+	ProjectSection(SolutionItems) = preProject
+		.gitattributes = .gitattributes
+		.gitignore = .gitignore
+		appveyor.yml = appveyor.yml
+		license.txt = license.txt
+		readme.md = readme.md
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{772A7B58-697C-4700-83B9-E0D93A4A81CC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{772A7B58-697C-4700-83B9-E0D93A4A81CC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{772A7B58-697C-4700-83B9-E0D93A4A81CC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{772A7B58-697C-4700-83B9-E0D93A4A81CC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5D21E24C-A566-4EC5-900C-42940B90B06B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5D21E24C-A566-4EC5-900C-42940B90B06B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5D21E24C-A566-4EC5-900C-42940B90B06B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5D21E24C-A566-4EC5-900C-42940B90B06B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{772A7B58-697C-4700-83B9-E0D93A4A81CC} = {4AAD29EC-2969-494A-B499-7ED3934A4E1F}
+		{5D21E24C-A566-4EC5-900C-42940B90B06B} = {87EC90AB-2250-4683-8D6D-DAD2B85F8619}
+	EndGlobalSection
+EndGlobal
