@@ -46,7 +46,7 @@ namespace XZ.Net.Filters
 
         public override void SetBaseStream(Stream stream)
         {
-            BaseStream = new SharpCompress.Compressor.LZMA.LzmaStream(new[] { _dictionarySize }, stream);
+            BaseStream = new SharpCompress.Compressors.LZMA.LzmaStream(new[] { _dictionarySize }, stream);
         }
 
         public override int Read(byte[] buffer, int offset, int count)
