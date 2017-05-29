@@ -4,9 +4,10 @@ install:
     dotnet restore
 build:
   verbosity: minimal
+test:
+  assemblies:
+  - 'test\**\*.Tests.dll'
 after_build:
 - cmd: dotnet pack
-test_script:
-- dotnet test --test-adapter-path:. --logger:Appveyor test\XZ.Net.Tests\XZ.Net.Tests.csproj
 artifacts:
 - path: '**\*.nupkg'
