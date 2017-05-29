@@ -4,12 +4,12 @@
     <TargetFramework>netstandard1.1</TargetFramework>
     <Authors>Sam Bott</Authors>
     <Company>Sam Bott</Company>
-    <Description>An implementation of XZ as a readonly stream. A .NET PCL.</Description>
-    <Copyright>Copyright 2015 Sam Bott</Copyright>
-    <PackageLicenseUrl>http://choosealicense.com/licenses/gpl-2.0/</PackageLicenseUrl>
-    <PackageTags>PCL XZ .NET</PackageTags>
+    <Description>An implementation of XZ as a readonly stream. No native libraries. .NET core</Description>
+    <Copyright>Copyright 2017 Sam Bott</Copyright>
+    <PackageLicenseUrl>https://choosealicense.com/licenses/mit/</PackageLicenseUrl>
+    <PackageTags>XZ .NET core</PackageTags>
     <PackageId>XZ.Net.Portable</PackageId>
-    <Version>1.0.0-beta0</Version>
+    <Version>1.0</Version>
     <RepositoryUrl>https://github.com/sambott/XZ.NET</RepositoryUrl>
   </PropertyGroup>
 

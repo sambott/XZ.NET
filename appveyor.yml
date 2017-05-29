@@ -1,17 +1,12 @@
-version: 1.0.0-beta0.{build}
-configuration: Release
-image: Visual Studio 2017
-environment:
-  DOTNET_CLI_TELEMETRY_OPTOUT: 1
-before_build:
-- msbuild.exe /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll" /p:Version=%APPVEYOR_BUILD_VERSION% /v:minimal /t:restore
-build_script:
-- msbuild.exe /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll" /p:Version=%APPVEYOR_BUILD_VERSION% /v:minimal /t:build
+version: 1.0.{build}
+install:
+- cmd: >-
+    dotnet restore
+build:
+  verbosity: minimal
 after_build:
-- msbuild.exe /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll" /p:Version=%APPVEYOR_BUILD_VERSION%;IncludeSymbols=true;IncludeSource=true /v:minimal /t:pack
+- cmd: dotnet pack
 test_script:
 - dotnet test --test-adapter-path:. --logger:Appveyor test\XZ.Net.Tests\XZ.Net.Tests.csproj
 artifacts:
 - path: '**\*.nupkg'
-cache:
-- '%USERPROFILE%\.nuget\packages'
